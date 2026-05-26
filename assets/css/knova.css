@@ -1002,9 +1002,21 @@ img, svg { display: block; max-inline-size: 100%; }
 
 .form-shell {
   border: 1px solid var(--gold-line);
-  padding: clamp(28px, 4vw, 48px);
+  padding: clamp(20px, 4vw, 48px);
   position: relative;
   background: var(--bg);
+  /* Defensive: never grow wider than the grid cell. */
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+@media (max-width: 560px) {
+  .form-shell { padding: 22px 18px; }
+  .step-q { font-size: clamp(22px, 5vw, 30px); }
+  .step-nav { gap: 16px; }
+  .step-nav > div { inline-size: 100%; justify-content: flex-end; }
 }
 .form-progress {
   display: flex;
@@ -1032,7 +1044,12 @@ img, svg { display: block; max-inline-size: 100%; }
   transition: transform var(--dur-base) var(--ease-out);
 }
 
-.step { display: none; }
+.step {
+  display: none;
+  border: 0;          /* reset default fieldset 2px groove border */
+  min-inline-size: 0; /* fieldset has its own min-content sizing — kill it */
+  padding: 0;
+}
 .step.active { display: block; }
 
 .step-q {
@@ -1116,8 +1133,26 @@ img, svg { display: block; max-inline-size: 100%; }
   font-family: var(--sans);
   font-size: 15px;
   outline: none;
+  /* Force full-column width so browser-default sizes (cols=20, etc.)
+     never push the form card wider than the viewport. */
+  display: block;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  box-sizing: border-box;
   transition: border-color var(--dur-fast) var(--ease-out);
 }
+.field select {
+  /* Remove platform UI and add a small gold caret for the select. */
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--gold) 50%),
+                    linear-gradient(135deg, var(--gold) 50%, transparent 50%);
+  background-position: calc(100% - 14px) 50%, calc(100% - 8px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-inline-end: 28px;
+}
+.field select option { background: var(--bg); color: var(--ink); }
 .field input:focus,
 .field select:focus,
 .field textarea:focus { border-block-end-color: var(--gold); }
@@ -1127,7 +1162,8 @@ img, svg { display: block; max-inline-size: 100%; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 12px 16px;
+  flex-wrap: wrap;
   margin-block-start: 36px;
   padding-block-start: 28px;
   border-block-start: 1px solid var(--line);
