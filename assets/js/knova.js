@@ -53,6 +53,7 @@ const FORM_ACCESS_KEY = null; // e.g. your Web3Forms access key
 
     const openMenu = () => {
       navMenu.classList.add('open');
+      navEl.classList.add('menu-open');
       navToggle.setAttribute('aria-expanded', 'true');
       navToggle.textContent = 'Close';
       inertTargets().forEach(el => el.setAttribute('inert', ''));
@@ -62,6 +63,7 @@ const FORM_ACCESS_KEY = null; // e.g. your Web3Forms access key
 
     const closeMenu = (refocus) => {
       navMenu.classList.remove('open');
+      navEl.classList.remove('menu-open');
       navToggle.setAttribute('aria-expanded', 'false');
       navToggle.textContent = 'Menu';
       inertTargets().forEach(el => el.removeAttribute('inert'));
