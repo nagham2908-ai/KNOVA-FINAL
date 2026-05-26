@@ -1,2113 +1,501 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Knova — Where Operational Excellence Meets Creative Vision</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Tenor+Sans&display=swap');
-  
-  :root {
-    --gold: #D4AF37;
-    --gold-dim: #8a7a3f;
-    --white: #f0ece4;
-    --black: #0a0a0a;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  html { scroll-behavior: smooth; }
-  
-  body {
-    background: var(--black);
-    color: var(--white);
-    font-family: 'Tenor Sans', 'Arial', sans-serif;
-    overflow-x: hidden;
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23C9A84C'/%3E%3Ccircle cx='10' cy='10' r='8' stroke='%23C9A84C' stroke-width='1' fill='none' opacity='0.4'/%3E%3C/svg%3E") 10 10, auto;
-  }
-
-  /* ═══════════════════════════════
-     LOADER
-  ═══════════════════════════════ */
-  #loader {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    background: var(--black);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 28px;
-    transition: opacity 0.7s ease;
-  }
-  
-  #loader.hidden { opacity: 0; pointer-events: none; }
-
-  .ld-logo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-  }
-
-  .ld-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: 48px;
-    letter-spacing: 12px;
-    color: var(--white);
-    text-transform: uppercase;
-  }
-
-  .ld-sub {
-    font-family: 'Tenor Sans', sans-serif;
-    font-size: 12px;
-    letter-spacing: 6px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-top: -10px;
-  }
-
-  .ld-bar-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .ld-label {
-    font-family: 'Tenor Sans', sans-serif;
-    font-size: 9px;
-    letter-spacing: 6px;
-    color: #888;
-    text-transform: uppercase;
-  }
-
-  .ld-track {
-    width: 220px;
-    height: 2px;
-    background: #1e1e1e;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .ld-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 0%;
-    background: var(--gold);
-    transition: width 3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* ═══════════════════════════════
-     NAVIGATION
-  ═══════════════════════════════ */
-  .nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 40px;
-    background: rgba(10, 10, 10, 0);
-    backdrop-filter: blur(0px);
-    border-bottom: 1px solid rgba(201, 168, 76, 0);
-    opacity: 0;
-    transition: all 0.6s ease;
-  }
-
-  .nav.show { opacity: 1; }
-
-  .nav.scrolled {
-    background: rgba(10, 10, 10, 0.95);
-    backdrop-filter: blur(16px);
-    border-bottom-color: rgba(201, 168, 76, 0.12);
-  }
-
-  .nav-brand {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-  }
-
-  .nav-brand-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: 24px;
-    letter-spacing: 12px;
-    color: var(--white);
-    text-transform: uppercase;
-    transition: color 0.3s ease;
-  }
-
-  .nav-brand:hover .nav-brand-name {
-    color: var(--gold);
-  }
-
-  .nav-menu {
-    display: flex;
-    gap: 40px;
-    list-style: none;
-  }
-
-  .nav-item {
-    position: relative;
-  }
-
-  .nav-link {
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--white);
-    text-decoration: none;
-    transition: color 0.3s ease;
-    display: block;
-    padding: 8px 0;
-    font-weight: 600;
-  }
-
-  .nav-link:hover { color: var(--gold); }
-
-  /* Dropdown */
-  .nav-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: rgba(10, 10, 10, 0.98);
-    border: 1px solid rgba(201, 168, 76, 0.15);
-    min-width: 260px;
-    padding: 20px 0;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-  }
-
-  .nav-item:hover .nav-dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-
-  .nav-dropdown-item {
-    padding: 14px 24px;
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: rgba(240, 236, 228, 0.85);
-    border-left: 2px solid transparent;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    font-weight: 500;
-  }
-
-  .nav-dropdown-item:hover {
-    color: var(--gold);
-    border-left-color: var(--gold);
-    background: rgba(201, 168, 76, 0.05);
-  }
-
-  /* Mobile menu toggle */
-  .nav-toggle {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-  }
-
-  .nav-toggle span {
-    width: 24px;
-    height: 1px;
-    background: var(--gold);
-    transition: all 0.3s ease;
-  }
-
-  /* ═══════════════════════════════
-     HERO - CINEMATIC
-  ═══════════════════════════════ */
-  .hero {
-    min-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 80px 40px 50px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: 
-      radial-gradient(circle at 30% 20%, rgba(201, 168, 76, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 70% 80%, rgba(201, 168, 76, 0.06) 0%, transparent 50%);
-    pointer-events: none;
-  }
-
-  .hero-lines {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-
-  .hero-line {
-    position: absolute;
-    background: linear-gradient(to right, transparent, var(--gold) 50%, transparent);
-    height: 1px;
-    width: 100%;
-    opacity: 0;
-    display: none;
-  }
-
-  .hero-line:nth-child(1) { top: 15%; }
-  .hero-line:nth-child(2) { top: 50%; }
-  .hero-line:nth-child(3) { bottom: 15%; }
-
-  .hero-content {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    max-width: 1000px;
-  }
-
-  .hero-logo {
-    margin-bottom: 24px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.2s forwards;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-  }
-
-  .hero-label {
-    font-size: 10px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 24px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.7s forwards;
-    font-weight: 600;
-  }
-
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(38px, 6.5vw, 68px);
-    letter-spacing: 8px;
-    color: var(--white);
-    text-transform: uppercase;
-    line-height: 1.1;
-    margin-bottom: 16px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.5s forwards;
-  }
-
-  .hero-subtitle {
-    font-family: 'Tenor Sans', sans-serif;
-    font-size: 7.5px;
-    letter-spacing: 7px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.7s forwards;
-  }
-
-  .hero-divider {
-    width: 36px;
-    height: 1px;
-    background: var(--gold);
-    opacity: 0.35;
-    margin: 6px auto 16px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.8s forwards;
-  }
-
-  .hero-divider {
-    width: 80px;
-    height: 1px;
-    background: var(--gold);
-    opacity: 0.6;
-    margin: 0 auto 32px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.7s forwards;
-  }
-
-  .hero-tagline {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 500;
-    font-style: normal;
-    font-size: clamp(14px, 1.5vw, 16px);
-    background: linear-gradient(90deg, #D4AF37 0%, #F4E4B8 50%, #D4AF37 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: 1px;
-    line-height: 1.4;
-    max-width: 700px;
-    margin: 0 auto 36px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.9s forwards;
-  }
-
-  .hero-cta {
-    display: inline-block;
-    font-family: 'Tenor Sans', sans-serif;
-    font-size: 10px;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    color: var(--gold);
-    background: transparent;
-    border: 1px solid var(--gold);
-    padding: 18px 56px;
-    text-decoration: none;
-    transition: all 0.4s ease;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 1.1s forwards;
-  }
-
-  .hero-cta:hover {
-    background: var(--gold);
-    color: var(--black);
-    transform: translateY(-2px);
-  }
-
-  .hero-branches {
-    display: flex;
-    gap: 32px;
-    justify-content: center;
-    flex-wrap: wrap;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 1.1s forwards;
-  }
-
-  .branch-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    padding: 24px 40px;
-    border: 1px solid rgba(201, 168, 76, 0.2);
-    transition: all 0.4s ease;
-    min-width: 220px;
-    background: rgba(201, 168, 76, 0.02);
-  }
-
-  .branch-link:hover {
-    border-color: var(--gold);
-    background: rgba(201, 168, 76, 0.06);
-    transform: translateY(-4px);
-  }
-
-  .branch-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 500;
-    font-size: 28px;
-    letter-spacing: 5px;
-    color: var(--white);
-    text-transform: uppercase;
-  }
-
-  .branch-desc {
-    font-size: 10px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: rgba(212, 175, 55, 0.9);
-    font-weight: 600;
-  }
-
-  .hero-scroll {
-    display: none;
-  }
-
-  .hero-scroll-text {
-    font-size: 8px;
-    letter-spacing: 4px;
-    color: rgba(201, 168, 76, 0.6);
-    text-transform: uppercase;
-  }
-
-  .hero-scroll-icon {
-    width: 1px;
-    height: 32px;
-    background: linear-gradient(to bottom, var(--gold), transparent);
-    animation: scrollPulse 2s ease infinite;
-  }
-
-  /* ═══════════════════════════════
-     VISION SECTION
-  ═══════════════════════════════ */
-  .vision {
-    padding: 60px 40px;
-    position: relative;
-    border-top: 1px solid rgba(201, 168, 76, 0.08);
-  }
-
-  .vision-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .vision-label {
-    font-size: 10px;
-    letter-spacing: 7px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    font-weight: 600;
-  }
-
-  .vision-label::before,
-  .vision-label::after {
-    content: '';
-    width: 32px;
-    height: 1px;
-    background: var(--gold);
-    opacity: 0.4;
-  }
-
-  .vision-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(32px, 4.5vw, 48px);
-    letter-spacing: 5px;
-    color: var(--white);
-    line-height: 1.4;
-    margin-bottom: 32px;
-  }
-
-  .vision-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(15px, 1.8vw, 18px);
-    color: var(--white);
-    line-height: 1.8;
-    max-width: 1000px;
-    margin: 0 auto 36px;
-  }
-
-  .vision-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 800px;
-    margin: 48px auto 0;
-  }
-
-  .stat {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 32px;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
-  }
-
-  .stat-number {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 400;
-    font-size: 28px;
-    letter-spacing: 2px;
-    color: #E5C158;
-    line-height: 1.2;
-  }
-
-  .stat-label {
-    font-family: 'Tenor Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #e8e8e8;
-    font-weight: 400;
-    text-align: right;
-    max-width: 220px;
-    line-height: 1.5;
-  }
-
-  /* ═══════════════════════════════
-     SERVICES SECTIONS
-  ═══════════════════════════════ */
-  .services-section {
-    padding: 80px 40px;
-    border-top: 1px solid rgba(201, 168, 76, 0.08);
-    position: relative;
-  }
-
-  .services-header {
-    text-align: center;
-    margin-bottom: 60px;
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .services-branch {
-    font-size: 10px;
-    letter-spacing: 7px;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    font-weight: 600;
-  }
-
-  .services-branch::before,
-  .services-branch::after {
-    content: '';
-    width: 28px;
-    height: 1px;
-    background: var(--gold);
-    opacity: 0.4;
-  }
-
-  .services-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(32px, 4.5vw, 48px);
-    letter-spacing: 10px;
-    color: var(--white);
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-
-  .services-title b {
-    font-weight: 600;
-  }
-
-  .services-subtitle {
-    font-size: 11px;
-    letter-spacing: 6px;
-    color: rgba(212, 175, 55, 0.6);
-    text-transform: uppercase;
-    margin-bottom: 32px;
-    font-weight: 600;
-  }
-
-  .services-desc {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(15px, 1.8vw, 18px);
-    color: #d8d8d8;
-    line-height: 1.8;
-  }
-
-  /* Services Grid */
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-    gap: 40px;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-
-  .service-card {
-    background: rgba(212, 175, 55, 0.04);
-    border: 1px solid rgba(212, 175, 55, 0.15);
-    padding: 48px 40px;
-    position: relative;
-    transition: all 0.5s ease;
-    overflow: hidden;
-  }
-
-  .service-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 0;
-    background: var(--gold);
-    transition: height 0.5s ease;
-  }
-
-  .service-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 0;
-    height: 3px;
-    background: var(--gold);
-    transition: width 0.5s ease;
-  }
-
-  .service-card:hover {
-    background: rgba(212, 175, 55, 0.08);
-    border-color: rgba(212, 175, 55, 0.4);
-    transform: translateY(-6px);
-  }
-
-  .service-card:hover::before {
-    height: 100%;
-  }
-
-  .service-card:hover::after {
-    width: 100%;
-  }
-
-  .service-number {
-    font-size: 13px;
-    letter-spacing: 5px;
-    color: rgba(212, 175, 55, 0.5);
-    margin-bottom: 24px;
-    font-weight: 600;
-  }
-
-  .service-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 400;
-    font-size: clamp(22px, 2.5vw, 28px);
-    letter-spacing: 2px;
-    color: var(--white);
-    margin-bottom: 20px;
-    line-height: 1.3;
-  }
-
-  .service-desc {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: 15px;
-    color: #c8c8c8;
-    line-height: 1.8;
-    margin-bottom: 28px;
-  }
-
-  .service-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 9px;
-  }
-
-  .service-tag {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    background: rgba(212, 175, 55, 0.08);
-    border: 1px solid rgba(212, 175, 55, 0.25);
-    padding: 7px 16px;
-    transition: all 0.3s ease;
-    font-weight: 500;
-  }
-
-  .service-tag:hover {
-    color: var(--black);
-    background: var(--gold);
-    border-color: var(--gold);
-  }
-
-  /* Consulting Phases - 3 phases horizontal layout */
-  .consulting-phases {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    max-width: 1000px;
-    margin: 0 auto 60px;
-  }
-
-  .phase-card {
-    text-align: center;
-    padding: 28px 20px;
-    border: 1px solid rgba(201, 168, 76, 0.3);
-    border-radius: 8px;
-    background: rgba(201, 168, 76, 0.02);
-    transition: all 0.3s ease;
-  }
-
-  .phase-card:hover {
-    border-color: var(--gold);
-    background: rgba(201, 168, 76, 0.05);
-    transform: translateY(-4px);
-  }
-
-  .phase-number {
-    width: 48px;
-    height: 48px;
-    margin: 0 auto 16px;
-    border: 2px solid var(--gold);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--gold);
-  }
-
-  .phase-title {
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin: 0 0 8px;
-    font-weight: 600;
-    color: var(--white);
-  }
-
-  .phase-desc {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 14px;
-    color: #c8c8c8;
-    margin: 0;
-    line-height: 1.6;
-  }
-
-  /* Featured card (custom development) */
-  .service-card.featured {
-    grid-column: 1 / -1;
-    border: 2px solid var(--gold);
-    background: rgba(201, 168, 76, 0.04);
-    padding: 32px 28px;
-    display: flex;
-    align-items: start;
-    gap: 32px;
-    flex-wrap: wrap;
-  }
-
-  .featured-content {
-    flex: 1;
-    min-width: 280px;
-  }
-
-  .featured-label {
-    font-size: 9px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 12px;
-    font-weight: 600;
-  }
-
-  .featured-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 24px;
-    margin: 0 0 12px;
-    font-weight: 500;
-    line-height: 1.3;
-    color: var(--white);
-  }
-
-  .featured-desc {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 15px;
-    color: #c8c8c8;
-    margin: 0;
-    line-height: 1.7;
-  }
-
-  .featured-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    max-width: 360px;
-    align-content: start;
-  }
-
-  .featured-tag {
-    font-size: 9px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 8px 14px;
-    border: 1px solid var(--gold);
-    border-radius: 4px;
-    color: var(--gold);
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  .featured-tag:hover {
-    background: var(--gold);
-    color: var(--black);
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .consulting-phases {
-      grid-template-columns: 1fr;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Knova, where operational excellence meets creative vision</title>
+  <meta name="description" content="Knova is a hybrid B2B firm: enterprise ERP, custom platforms, and the brand systems that wrap them. Tech and Studio, one team." />
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="canonical" href="https://knova.studio/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Knova" />
+  <meta property="og:title" content="Knova, where operational excellence meets creative vision" />
+  <meta property="og:description" content="Hybrid B2B firm. Enterprise ERP, custom platforms, and the brand systems that wrap them. Tech and Studio, one team." />
+  <meta property="og:url" content="https://knova.studio/" />
+  <meta property="og:image" content="https://knova.studio/assets/img/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Knova, where operational excellence meets creative vision" />
+  <meta name="twitter:description" content="Hybrid B2B firm. Enterprise ERP, custom platforms, and the brand systems that wrap them." />
+  <meta name="twitter:image" content="https://knova.studio/assets/img/og-image.png" />
+
+  <link rel="icon" type="image/png" href="assets/img/kn-mark.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Tenor+Sans&display=swap" />
+  <link rel="stylesheet" href="assets/css/knova.css?v=13" />
+
+  <!-- JSON-LD Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Knova",
+    "url": "https://knova.studio/",
+    "logo": "https://knova.studio/assets/img/knova-wordmark.png",
+    "description": "Hybrid B2B firm: enterprise ERP, custom platforms, and the brand systems that wrap them. Tech and Studio, one team.",
+    "foundingDate": "2024",
+    "areaServed": "MENA",
+    "knowsAbout": ["Odoo ERP", "Custom platforms", "AI workflows", "Brand identity", "UI/UX design", "Motion design"],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "hello@knova.studio",
+      "contactType": "Sales",
+      "availableLanguage": ["English", "Arabic"]
     }
   }
-
-  /* ═══════════════════════════════
-     KEEP IN TOUCH SECTION
-  ═══════════════════════════════ */
-  .keep-in-touch {
-    padding: 70px 40px;
-    border-top: 1px solid rgba(201, 168, 76, 0.08);
-    text-align: center;
-  }
-
-  .keep-in-touch-header {
-    margin-bottom: 50px;
-  }
-
-  .keep-in-touch-label {
-    font-size: 10px;
-    letter-spacing: 7px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    font-weight: 600;
-  }
-
-  .keep-in-touch-label::before,
-  .keep-in-touch-label::after {
-    content: '';
-    width: 32px;
-    height: 1px;
-    background: var(--gold);
-    opacity: 0.4;
-  }
-
-  .keep-in-touch-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(32px, 4.5vw, 48px);
-    letter-spacing: 10px;
-    color: var(--white);
-    margin-bottom: 28px;
-  }
-
-  .keep-in-touch-desc {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(15px, 1.8vw, 18px);
-    color: #d8d8d8;
-    line-height: 1.8;
-    max-width: 700px;
-    margin: 0 auto;
-  }
-
-  .keep-in-touch-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 32px;
-    max-width: 1000px;
-    margin: 0 auto;
-  }
-
-  .keep-in-touch-card {
-    padding: 48px 36px;
-    border: 1px solid rgba(201, 168, 76, 0.15);
-    background: rgba(201, 168, 76, 0.02);
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    transition: all 0.4s ease;
-  }
-
-  .keep-in-touch-card:hover {
-    border-color: var(--gold);
-    background: rgba(201, 168, 76, 0.05);
-    transform: translateY(-6px);
-  }
-
-  .keep-in-touch-icon {
-    color: var(--gold);
-    margin-bottom: 8px;
-  }
-
-  .keep-in-touch-card-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 400;
-    font-size: 24px;
-    letter-spacing: 2px;
-    color: var(--white);
-    text-transform: uppercase;
-  }
-
-  .keep-in-touch-card-desc {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 15px;
-    color: #999;
-    line-height: 1.8;
-    text-align: center;
-    font-weight: 300;
-  }
-
-  /* ═══════════════════════════════
-     CONTACT / LEAD GENERATION
-  ═══════════════════════════════ */
-  .contact {
-    padding: 80px 40px;
-    border-top: 1px solid rgba(201, 168, 76, 0.08);
-    position: relative;
-    background: rgba(201, 168, 76, 0.01);
-  }
-
-  .contact::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 50% 50%, rgba(201, 168, 76, 0.06) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .contact-content {
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-  }
-
-  .contact-label {
-    font-size: 10px;
-    letter-spacing: 7px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    font-weight: 600;
-  }
-
-  .contact-label::before,
-  .contact-label::after {
-    content: '';
-    width: 32px;
-    height: 1px;
-    background: var(--gold);
-    opacity: 0.4;
-  }
-
-  .contact-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(28px, 4vw, 42px);
-    letter-spacing: 8px;
-    color: var(--white);
-    margin-bottom: 28px;
-    line-height: 1.2;
-  }
-
-  .contact-desc {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(14px, 1.6vw, 16px);
-    color: #d8d8d8;
-    line-height: 1.7;
-    margin-bottom: 40px;
-  }
-
-  .consultation-features {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    margin-bottom: 64px;
-    max-width: 950px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  @media (max-width: 968px) {
-    .consultation-features {
-      grid-template-columns: 1fr;
-      gap: 20px;
-      max-width: 500px;
-    }
-  }
-
-  .consultation-feature {
-    text-align: center;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    padding: 28px 20px;
-    transition: all 0.3s ease;
-  }
-
-  .consultation-feature:hover {
-    border-color: var(--gold);
-    background: rgba(212, 175, 55, 0.03);
-  }
-
-  .consultation-feature-icon {
-    color: var(--gold);
-    margin-bottom: 20px;
-  }
-
-  .consultation-feature-title {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--white);
-    margin-bottom: 10px;
-    font-weight: 600;
-  }
-
-  .consultation-feature-desc {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 14px;
-    color: var(--white);
-    line-height: 1.7;
-    opacity: 0.7;
-    text-align: center;
-  }
-
-  .contact-form {
-    max-width: 700px;
-    margin: 0 auto 48px;
-    text-align: left;
-  }
-
-  .form-btn-wrapper {
-    text-align: center;
-    margin-top: 32px;
-  }
-
-  .form-group {
-    margin-bottom: 28px;
-  }
-
-  .form-label {
-    font-size: 10px;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 12px;
-    display: block;
-    font-weight: 600;
-  }
-
-  .form-input,
-  .form-textarea,
-  .form-select {
-    width: 100%;
-    background: rgba(201, 168, 76, 0.03);
-    border: 1px solid rgba(201, 168, 76, 0.15);
-    padding: 16px 20px;
-    font-family: 'Tenor Sans', sans-serif;
-    font-size: 14px;
-    color: var(--white);
-    transition: all 0.3s ease;
-  }
-
-  .form-input:focus,
-  .form-textarea:focus,
-  .form-select:focus {
-    outline: none;
-    border-color: var(--gold);
-    background: rgba(201, 168, 76, 0.05);
-  }
-
-  .form-textarea {
-    min-height: 150px;
-    resize: vertical;
-  }
-
-  .contact-btn {
-    display: inline-block;
-    font-family: 'Tenor Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    color: var(--black);
-    background: var(--gold);
-    border: 2px solid var(--gold);
-    padding: 22px 72px;
-    text-decoration: none;
-    transition: all 0.5s ease;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-  }
-
-  .contact-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--black);
-    transform: translateX(-100%);
-    transition: transform 0.5s ease;
-    z-index: 0;
-  }
-
-  .contact-btn span {
-    position: relative;
-    z-index: 1;
-  }
-
-  .contact-btn:hover::before {
-    transform: translateX(0);
-  }
-
-  .contact-btn:hover {
-    color: var(--gold);
-  }
-
-  .contact-methods {
-    margin-top: 64px;
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    flex-wrap: wrap;
-  }
-
-  .contact-method {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding: 24px 32px;
-    border: 1px solid rgba(201, 168, 76, 0.15);
-    transition: all 0.4s ease;
-    text-decoration: none;
-  }
-
-  .contact-method:hover {
-    border-color: var(--gold);
-    background: rgba(201, 168, 76, 0.03);
-  }
-
-  .contact-method-icon {
-    font-size: 32px;
-  }
-
-  .contact-method-label {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 500;
-  }
-
-  /* ═══════════════════════════════
-     FOOTER
-  ═══════════════════════════════ */
-  .footer {
-    padding: 80px 40px 40px;
-    border-top: 1px solid rgba(201, 168, 76, 0.08);
-  }
-
-  .footer-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 60px;
-    margin-bottom: 60px;
-  }
-
-  .footer-section {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .footer-logo-section {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .footer-tagline {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-weight: 300;
-    font-size: 15px;
-    color: #b8b8b8;
-    line-height: 1.8;
-  }
-
-  .footer-title {
-    font-size: 11px;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    color: #E5C158;
-    margin-bottom: 16px;
-    font-weight: 600;
-  }
-
-  .footer-links {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .footer-link {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: rgba(240, 236, 228, 0.9);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-
-  .footer-link:hover {
-    color: var(--gold);
-  }
-
-  .footer-social {
-    display: flex;
-    gap: 20px;
-    margin-top: 8px;
-  }
-
-  .social-link {
-    padding: 10px 20px;
-    border: 1px solid rgba(201, 168, 76, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: rgba(201, 168, 76, 0.85);
-    font-size: 9px;
-    letter-spacing: 2px;
-    transition: all 0.3s ease;
-    font-weight: 500;
-    text-transform: uppercase;
-  }
-
-  .social-link:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    background: rgba(201, 168, 76, 0.05);
-  }
-
-  .footer-bottom {
-    text-align: center;
-    padding-top: 40px;
-    border-top: 1px solid rgba(201, 168, 76, 0.06);
-  }
-
-  .footer-copyright {
-    font-size: 8px;
-    letter-spacing: 4px;
-    color: #b8b8b8;
-    text-transform: uppercase;
-  }
-
-  /* ═══════════════════════════════
-     ANIMATIONS
-  ═══════════════════════════════ */
-  @keyframes fadeUp {
-    from {
-      opacity: 0;
-      transform: translateY(24px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.3; transform: translateY(0); }
-    50% { opacity: 1; transform: translateY(10px); }
-  }
-
-  /* ═══════════════════════════════
-     RESPONSIVE
-  ═══════════════════════════════ */
-  @media (max-width: 768px) {
-    .nav-menu {
-      position: fixed;
-      top: 70px;
-      left: 0;
-      right: 0;
-      background: rgba(10, 10, 10, 0.98);
-      flex-direction: column;
-      gap: 0;
-      padding: 20px 0;
-      border-bottom: 1px solid rgba(201, 168, 76, 0.1);
-      transform: translateY(-150%);
-      opacity: 0;
-      transition: all 0.4s ease;
-      max-height: calc(100vh - 70px);
-      overflow-y: auto;
-    }
-
-    .nav-menu.active {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .nav-item {
-      padding: 0 40px;
-    }
-
-    .nav-link {
-      padding: 18px 0;
-      border-bottom: 1px solid rgba(201, 168, 76, 0.05);
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .nav-dropdown {
-      position: static;
-      opacity: 1;
-      visibility: visible;
-      transform: none;
-      border: none;
-      border-left: 2px solid rgba(201, 168, 76, 0.1);
-      margin-left: 20px;
-      margin-top: 8px;
-      padding: 12px 0;
-    }
-
-    .nav-dropdown-item {
-      font-size: 11px;
-      padding: 12px 20px;
-      font-weight: 500;
-    }
-
-    .nav-toggle {
-      display: flex;
-    }
-
-    .services-grid,
-    .keep-in-touch-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .hero {
-      padding: 100px 24px 60px;
-    }
-
-    .hero-scroll {
-      display: none;
-    }
-
-    .services-section,
-    .vision,
-    .keep-in-touch,
-    .contact {
-      padding: 80px 24px;
-    }
-
-    .hero-branches {
-      flex-direction: column;
-      width: 100%;
-      align-items: stretch;
-    }
-
-    .branch-link {
-      width: 100%;
-      min-width: auto;
-    }
-
-    .footer-content {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-  }
-</style>
+  </script>
 </head>
 <body>
 
-<!-- ═══ LOADER ═══ -->
-<div id="loader">
-  <div class="ld-logo">
-    <svg viewBox="0 0 160 160" fill="none" width="72" height="72">
-      <path d="M8 8 L8 65" stroke="#f0ece4" stroke-width="2" stroke-linecap="round"/>
-      <path d="M8 36 L48 8" stroke="#f0ece4" stroke-width="2" stroke-linecap="round"/>
-      <path d="M8 36 L48 65" stroke="#f0ece4" stroke-width="2" stroke-linecap="round"/>
-      <path d="M55 148 L105 12" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M112 95 L112 152" stroke="#f0ece4" stroke-width="2" stroke-linecap="round"/>
-      <path d="M112 95 L152 152" stroke="#f0ece4" stroke-width="2" stroke-linecap="round"/>
-      <path d="M152 95 L152 152" stroke="#f0ece4" stroke-width="2" stroke-linecap="round"/>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- ── LOADER ───────────────────────────────────────────────────── -->
+  <div id="loader" aria-hidden="true">
+    <div>
+      <img class="ld-wordmark" src="assets/img/knova-wordmark.png" alt="Knova" />
+      <div class="ld-sub">Est. 2024</div>
+    </div>
+    <div class="ld-track"><div class="ld-fill"></div></div>
+  </div>
+
+  <!-- ── NAV ──────────────────────────────────────────────────────── -->
+  <nav class="nav" aria-label="Primary">
+    <a href="index.html" class="nav-brand" aria-label="Knova home">
+      <img class="nav-logo" src="assets/img/kn-mark.png" alt="Knova" />
+      <span class="nav-est">Est. 2024</span>
+    </a>
+    <button class="nav-toggle" aria-controls="primary-menu" aria-expanded="false">Menu</button>
+    <ul id="primary-menu" class="nav-menu">
+      <li><a class="nav-link" href="index.html" aria-current="page">Home</a></li>
+      <li><a class="nav-link" href="tech.html">Tech</a></li>
+      <li><a class="nav-link" href="studio.html">Studio</a></li>
+      <li><a class="nav-link" href="contact.html">Contact</a></li>
+    </ul>
+    <a class="nav-cta" href="contact.html">Book a call <span class="arrow" aria-hidden="true">&rarr;</span></a>
+  </nav>
+
+  <!-- ── HERO ─────────────────────────────────────────────────────── -->
+  <!-- Atmosphere: GLOWY WAVES (canvas, ported from 21st.dev moumensoliman/glowy-waves-hero).
+       5 layered sine-waves with shadowBlur glow + mouse influence. -->
+  <header class="hero" id="main">
+    <canvas class="hero-waves" aria-hidden="true"></canvas>
+
+    <div class="container">
+      <div class="hero-grid reveal">
+        <div>
+          <div class="hero-tag">
+            <span class="hairline"></span>
+            <span class="eyebrow">Operations &middot; Brand &middot; AI</span>
+          </div>
+          <h1 class="display">
+            Operational excellence,<br />
+            wrapped in <i>creative</i> vision.
+          </h1>
+          <p class="lede" style="margin-block-start:32px;">
+            Knova is a hybrid B2B firm. We engineer the systems your business runs on,
+            and we design the brand it walks into the room with. One team, one deadline,
+            one standard.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn--lg" href="contact.html">Book a 30-min call <span class="arrow">&rarr;</span></a>
+            <a class="btn btn--ghost" href="#model">See how we work</a>
+          </div>
+          <div class="hero-meta">
+            <div><b>10+</b> years across ERP and creative</div>
+            <div><b>12</b> Odoo modules, production-grade</div>
+            <div><b>6</b> creative disciplines under one roof</div>
+            <div><b>MENA</b> based, remote-friendly</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── VISION & MISSION ────────────────────────────────────────── -->
+  <!-- Atmosphere: MESH GRADIENT (Paper Shaders port). 4 morphing blurred blobs,
+       relocated here from the homepage hero. -->
+  <section class="vision-section" id="vision">
+    <div class="hero-mesh" aria-hidden="true">
+      <div class="mesh-blob mesh-blob--1"></div>
+      <div class="mesh-blob mesh-blob--2"></div>
+      <div class="mesh-blob mesh-blob--3"></div>
+      <div class="mesh-blob mesh-blob--4"></div>
+    </div>
+    <div class="container">
+      <div class="vision-eyebrow-row reveal">
+        <span class="hairline"></span>
+        <span class="eyebrow">Vision &amp; mission</span>
+      </div>
+
+      <div class="vision-grid reveal">
+        <h2 class="vision-statement">
+          A region where every B2B firm can run like an <i>operating system</i> and look like a <i>brand worth choosing.</i>
+        </h2>
+        <div class="vision-aside">
+          <img class="vision-aside-mark" src="assets/img/kn-mark.png" alt="Knova" />
+          <div class="vision-mission-label">The work, in plain language</div>
+          <p class="vision-mission">
+            Knova exists to close the gap between how a business runs and how it presents.
+            We engineer the systems and design the surfaces in the <b>same room, on the
+            same timeline, against the same standard.</b> For the operators who refuse to
+            choose between rigor and craft.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── DIRECTIONS (four focus areas) ──────────────────────────── -->
+  <section class="directions" aria-labelledby="directions-label">
+    <div class="container">
+      <div class="directions-head reveal">
+        <div>
+          <span class="eyebrow" id="directions-label">Directions</span>
+          <h2 class="h1" style="margin-block-start:14px;">Four directions, <i>one trajectory.</i></h2>
+        </div>
+        <p class="lede">
+          Four places we deepen the work. They overlap by design; the same project
+          usually touches at least three.
+        </p>
+      </div>
+
+      <ul class="directions-grid reveal">
+        <li class="direction">
+          <span class="direction-mark">Direction 01</span>
+          <h3 class="direction-name">Operations.</h3>
+          <p class="direction-body">
+            One ledger, configured to your actual workflow, integrated with what you
+            cannot rip out yet.
+          </p>
+        </li>
+        <li class="direction">
+          <span class="direction-mark">Direction 02</span>
+          <h3 class="direction-name">Brand.</h3>
+          <p class="direction-body">
+            Identity systems, not file packs. Built so your team ships on-brand
+            without a designer in the room.
+          </p>
+        </li>
+        <li class="direction">
+          <span class="direction-mark">Direction 03</span>
+          <h3 class="direction-name">Interface.</h3>
+          <p class="direction-body">
+            Products, portals, and storefronts designed with the engineers who ship
+            them, not consulted afterwards.
+          </p>
+        </li>
+        <li class="direction">
+          <span class="direction-mark">Direction 04</span>
+          <h3 class="direction-name">Intelligence.</h3>
+          <p class="direction-body">
+            AI installed once the boring problem is solved. Models for matching,
+            forecasting, and routine automation.
+          </p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── THE KNOVA MODEL ─────────────────────────────────────────── -->
+  <section class="section" id="model">
+    <div class="container container--narrow reveal">
+      <div class="eyebrow eyebrow--mute" style="margin-block-end:24px;">The Knova model</div>
+      <h2 class="h1">
+        Most firms make you pick:<br />
+        a systems shop, <i>or</i> a design agency.
+      </h2>
+      <p class="lede" style="margin-block-start:36px;">
+        We built Knova for the project where you cannot. Replacing a legacy ERP and launching
+        a brand refresh in the same quarter. Standing up a new portal that has to feel like
+        the product, not a back-office bolt-on. The work where operations and brand are the
+        same problem.
+      </p>
+      <p class="body" style="margin-block-start:24px; font-size:16px;">
+        Knova Tech handles the engineering: Odoo implementation, custom modules, integrations,
+        AI workflows. Knova Studio handles the surfaces: identity, interfaces, motion. Same
+        roof, same calendar, same accountability.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── TWO BRANCHES AT A GLANCE ────────────────────────────────── -->
+  <!-- Atmosphere: SHAPES ONLY. The rotated rectangles echo the two-up layout. -->
+  <section class="section--tight section-stage">
+    <div class="hero-shapes" aria-hidden="true">
+      <div class="hero-shape hero-shape--a"></div>
+      <div class="hero-shape hero-shape--b"></div>
+    </div>
+    <div class="container container--wide">
+      <div class="branches reveal">
+        <article class="branch branch--tech">
+          <div class="eyebrow">Technology branch</div>
+          <h3 class="h2">Knova <i>Tech</i></h3>
+          <p class="body">
+            ERP, custom platforms, and AI workflows for businesses that need their
+            back office to actually run their business.
+          </p>
+          <div class="branch-cap">
+            <span class="tag">Odoo ERP</span>
+            <span class="tag">Custom Modules</span>
+            <span class="tag">Integrations</span>
+            <span class="tag">AI Workflows</span>
+            <span class="tag">Dashboards</span>
+            <span class="tag">E-Invoicing</span>
+          </div>
+          <a class="branch-link" href="tech.html">Explore Tech <span aria-hidden="true">&rarr;</span></a>
+        </article>
+        <article class="branch branch--studio">
+          <div class="eyebrow">Creative branch</div>
+          <h3 class="h2">Knova <i>Studio</i></h3>
+          <p class="body">
+            Brand systems, product interfaces, and motion for businesses that
+            want to look like the standard, not chase it.
+          </p>
+          <div class="branch-cap">
+            <span class="tag">Brand Identity</span>
+            <span class="tag">UI / UX</span>
+            <span class="tag">Web Design</span>
+            <span class="tag">Social &amp; Ads</span>
+            <span class="tag">3D Art</span>
+            <span class="tag">Motion</span>
+          </div>
+          <a class="branch-link" href="studio.html">Explore Studio <span aria-hidden="true">&rarr;</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW WE WORK ─────────────────────────────────────────────── -->
+  <!-- Atmosphere: CONTOUR ONLY. Lines suggest the process flow itself. -->
+  <section class="section section-stage">
+    <svg class="hero-contour" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <path d="M -50 200 C 320 240, 700 320, 1050 280 S 1500 240, 1700 260" />
+      <path d="M -50 740 C 320 700, 700 780, 1050 720 S 1500 680, 1700 700" />
     </svg>
-    <div class="ld-name">KNOVA</div>
-    <div class="ld-sub">Tech &nbsp;|&nbsp; Art</div>
-  </div>
-  <div class="ld-bar-wrap">
-    <div class="ld-label">Loading Experience</div>
-    <div class="ld-track"><div class="ld-fill" id="ldFill"></div></div>
-  </div>
-</div>
-
-<!-- ═══ NAVIGATION ═══ -->
-<nav class="nav" id="nav">
-  <a href="#" class="nav-brand">
-    <span class="nav-brand-name">KNOVA</span>
-  </a>
-
-  <ul class="nav-menu" id="navMenu">
-    <li class="nav-item">
-      <a href="#tech" class="nav-link">Knova Tech</a>
-      <div class="nav-dropdown">
-        <div class="nav-dropdown-item" onclick="scrollToService('tech-sales')">Sales & CRM</div>
-        <div class="nav-dropdown-item" onclick="scrollToService('tech-purchase')">Purchase Management</div>
-        <div class="nav-dropdown-item" onclick="scrollToService('tech-inventory')">Inventory Control</div>
-        <div class="nav-dropdown-item" onclick="scrollToService('tech-finance')">Finance & Accounting</div>
-        <div class="nav-dropdown-item" onclick="scrollToService('tech-hr')">HR & Payroll</div>
-        <div class="nav-dropdown-item" onclick="scrollToService('tech-manufacturing')">Manufacturing</div>
+    <div class="container">
+      <div class="reveal" style="margin-block-end:56px; max-inline-size:var(--measure);">
+        <div class="eyebrow eyebrow--mute" style="margin-block-end:18px;">How we work</div>
+        <h2 class="h1">A method, not a mystery.</h2>
+        <p class="lede" style="margin-block-start:24px;">
+          Four phases. Clear deliverables at each step. You see progress weekly and
+          know what is shipping next.
+        </p>
       </div>
-    </li>
-    
-    <li class="nav-item">
-      <a href="#studio" class="nav-link">Knova Studio</a>
-      <div class="nav-dropdown">
-        <div class="nav-dropdown-item" onclick="scrollToService('studio-brand')">Brand Identity</div>
-        <div class="nav-dropdown-item" onclick="scrollToService('studio-uiux')">UI/UX Design</div>
-        <div class="nav-dropdown-item" onclick="scrollToService('studio-web')">Website Design</div>
-        <div class="nav-dropdown-item" onclick="scrollToService('studio-social')">Social Media</div>
-        <div class="nav-dropdown-item" onclick="scrollToService('studio-3d')">3D Art & Design</div>
-        <div class="nav-dropdown-item" onclick="scrollToService('studio-motion')">Motion & Animation</div>
-      </div>
-    </li>
-    
-    <li class="nav-item">
-      <a href="#contact" class="nav-link">Contact</a>
-    </li>
-  </ul>
 
-  <div class="nav-toggle" id="navToggle">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</nav>
-
-<!-- ═══ HERO ═══ -->
-<section class="hero">
-  <div class="hero-lines">
-    <div class="hero-line"></div>
-    <div class="hero-line"></div>
-    <div class="hero-line"></div>
-  </div>
-  
-  <div class="hero-content">
-    <div class="hero-logo">
-      <svg viewBox="0 0 160 160" fill="none" width="80" height="80">
-        <path d="M8 8 L8 65" stroke="#f0ece4" stroke-width="2" stroke-linecap="round"/>
-        <path d="M8 36 L48 8" stroke="#f0ece4" stroke-width="2" stroke-linecap="round"/>
-        <path d="M8 36 L48 65" stroke="#f0ece4" stroke-width="2" stroke-linecap="round"/>
-        <path d="M55 148 L105 12" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M112 95 L112 152" stroke="#f0ece4" stroke-width="2" stroke-linecap="round"/>
-        <path d="M112 95 L152 152" stroke="#f0ece4" stroke-width="2" stroke-linecap="round"/>
-        <path d="M152 95 L152 152" stroke="#f0ece4" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </div>
-    
-    <h1 class="hero-title">KNOVA</h1>
-    <div class="hero-label">10+ Years of Mastery, Powered by AI</div>
-    <p class="hero-tagline">AI-powered fusion of powerful systems and elite artistic excellence</p>
-    
-    <a href="#contact" class="hero-cta">
-      <span>Let's Build Your Vision</span>
-    </a>
-  </div>
-</section>
-
-<!-- ═══ OUR STORY ═══ -->
-<section class="vision">
-  <div class="vision-content">
-    <div class="vision-label">Our Story</div>
-    <h2 class="vision-title">About Knova</h2>
-    
-    <p class="vision-text">
-      Knova was born from two worlds — the power of technology and the passion of art.
-    </p>
-    
-    <p class="vision-text" style="margin-top: 28px; color: var(--white);">
-      Behind Knova stands a team of <span style="color: var(--gold); font-style: italic;">senior consultants</span>, ERP architects and creative directors with over <span style="color: var(--gold); font-weight: 400;">10 years</span> of hands-on experience building digital solutions for global brands. Rather than choosing between technical precision and creative excellence, we built a studio where both could exist, <span style="color: var(--gold); font-style: italic;">powered by AI</span> to deliver faster without compromising quality.
-    </p>
-    
-    <p class="vision-text" style="margin-top: 28px; color: var(--white);">
-      We exist to help businesses bring their vision to life — strategically, beautifully, and digitally.
-    </p>
-    
-    <div class="vision-stats">
-      <div class="stat">
-        <div class="stat-number">Experienced</div>
-        <div class="stat-label">10+ Years Excellence</div>
-      </div>
-      <div class="stat">
-        <div class="stat-number">AI-Enhanced</div>
-        <div class="stat-label">Intelligent Automation</div>
-      </div>
-      <div class="stat">
-        <div class="stat-number">Dual Mastery</div>
-        <div class="stat-label">Tech & Design</div>
-      </div>
-      <div class="stat">
-        <div class="stat-number">World-Class</div>
-        <div class="stat-label">Enterprise Clients</div>
+      <div class="method reveal">
+        <article class="stage">
+          <div class="stage-num">01</div>
+          <h3 class="stage-name">Discovery</h3>
+          <p class="stage-body">
+            A working session, not a sales call. We map your current stack, the
+            friction, and the outcome you actually want. You leave with a written
+            read of the situation, free.
+          </p>
+          <div class="stage-meta">30-min call</div>
+        </article>
+        <article class="stage">
+          <div class="stage-num">02</div>
+          <h3 class="stage-name">Blueprint</h3>
+          <p class="stage-body">
+            A phased plan: scope, sequence, who does what, what success looks like.
+            Tech and Studio scoped together when the project needs both.
+          </p>
+          <div class="stage-meta">Within 5 business days</div>
+        </article>
+        <article class="stage">
+          <div class="stage-num">03</div>
+          <h3 class="stage-name">Delivery</h3>
+          <p class="stage-body">
+            Sprint-based. Weekly demos. A shared channel so questions take hours,
+            not days. Production-grade, not proof-of-concept.
+          </p>
+          <div class="stage-meta">Weekly visibility</div>
+        </article>
+        <article class="stage">
+          <div class="stage-num">04</div>
+          <h3 class="stage-name">Optimize</h3>
+          <p class="stage-body">
+            We do not disappear at go-live. Post-launch tuning, training, and
+            the next round of automation when you are ready for it.
+          </p>
+          <div class="stage-meta">Continuous</div>
+        </article>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ═══ KNOVA TECH ═══ -->
-<section class="services-section" id="tech">
-  <div class="services-header">
-    <div class="services-branch">Technology Branch</div>
-    <h2 class="services-title">Knova <b>Tech</b></h2>
-    <p class="services-subtitle">ERP · Odoo · Digital Transformation</p>
-    <p class="services-desc">Strategic ERP consulting across Sales, CRM, Purchase, Inventory, Finance, and HR — from analysis to implementation</p>
-  </div>
+  <!-- ── MATURITY JOURNEY (bento layout, ported from 21st.dev/kavikatiyar/bento-product-features) ── -->
+  <section class="section" id="journey">
+    <div class="container">
+      <div class="bento" role="list">
+        <article class="bento-cell bento-cell--lead reveal" role="listitem">
+          <div class="bento-lead-eyebrow">The maturity journey</div>
+          <h2 class="bento-lead-headline">From fragmented, <i>to compounding.</i></h2>
+          <p class="bento-lead-lede">
+            Most B2B firms are sitting on stage one or two. The work is helping them
+            climb. Knova is built to take a client all the way.
+          </p>
+          <div class="bento-lead-progress" aria-hidden="true">
+            <span>i</span><span>ii</span><span>iii</span><span>iv</span>
+          </div>
+        </article>
 
-  <!-- 3-Phase Consulting Approach -->
-  <div class="consulting-phases">
-    <div class="phase-card">
-      <div class="phase-number">1</div>
-      <h3 class="phase-title">Gap Analysis</h3>
-      <p class="phase-desc">Identify process inefficiencies and opportunities</p>
-    </div>
-    
-    <div class="phase-card">
-      <div class="phase-number">2</div>
-      <h3 class="phase-title">Implementation</h3>
-      <p class="phase-desc">Deploy tailored solutions with ongoing support</p>
-    </div>
-    
-    <div class="phase-card">
-      <div class="phase-number">3</div>
-      <h3 class="phase-title">Development</h3>
-      <p class="phase-desc">Custom solutions tailored to your business needs</p>
-    </div>
-  </div>
+        <article class="bento-cell bento-cell--a reveal" role="listitem">
+          <div class="bento-mark">i.</div>
+          <h3 class="bento-title">Fragmented.</h3>
+          <p class="bento-body">
+            Spreadsheets glued to legacy software. A brand assembled from whatever the
+            last freelancer left behind. Operations and brand pulling apart.
+          </p>
+        </article>
 
-  <!-- Core Modules Header -->
-  <div style="text-align: center; margin-bottom: 40px;">
-    <h3 style="font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin: 0 0 8px;">Core Modules</h3>
-    <p style="font-family: 'Cormorant Garamond', serif; font-size: 15px; color: #c8c8c8; margin: 0;">Full-stack Odoo implementation across business functions</p>
-  </div>
+        <article class="bento-cell bento-cell--b reveal" role="listitem">
+          <div class="bento-mark">ii.</div>
+          <h3 class="bento-title">Foundation.</h3>
+          <p class="bento-body">
+            Odoo deployed and configured to your actual workflow. Real data, cleaned and
+            migrated. Numbers you trust enough to act on.
+          </p>
+        </article>
 
-  <!-- 10 Module Cards -->
-  <div class="services-grid">
-    <!-- 01 Sales & CRM -->
-    <div class="service-card" id="tech-sales">
-      <div class="service-number">01</div>
-      <h3 class="service-title">Sales & CRM</h3>
-      <p class="service-desc">Complete sales automation with lead management, pipeline tracking, and subscription billing</p>
-      <div class="service-tags">
-        <span class="service-tag">Lead Mgmt</span>
-        <span class="service-tag">Pipeline</span>
-        <span class="service-tag">Subscription</span>
+        <article class="bento-cell bento-cell--c reveal" role="listitem">
+          <div class="bento-mark">iii.</div>
+          <h3 class="bento-title">Branded &amp; automated.</h3>
+          <p class="bento-body">
+            A coherent identity across every customer surface. Workflow automation
+            handling the routine. Portals where partners self-serve.
+          </p>
+        </article>
+
+        <article class="bento-cell bento-cell--d reveal" role="listitem">
+          <div class="bento-mark">iv.</div>
+          <h3 class="bento-title">Compounding.</h3>
+          <p class="bento-body">
+            AI workflows that learn from your exceptions. Operations that improve every
+            quarter without another big-bang project.
+          </p>
+        </article>
+
+        <article class="bento-cell bento-cell--wide reveal" role="listitem">
+          <div>
+            <div class="bento-lead-eyebrow" style="margin-block-end:10px;">Where Knova starts</div>
+            <h3 class="bento-title">A full audit, no commitment.</h3>
+          </div>
+          <a class="btn" href="contact.html">Book a 30-min call <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        </article>
       </div>
     </div>
+  </section>
 
-    <!-- 02 Purchase Management -->
-    <div class="service-card" id="tech-purchase">
-      <div class="service-number">02</div>
-      <h3 class="service-title">Purchase Management</h3>
-      <p class="service-desc">Streamline procurement with vendor management and automated approval workflows</p>
-      <div class="service-tags">
-        <span class="service-tag">Procurement</span>
-        <span class="service-tag">Vendors</span>
-        <span class="service-tag">Approvals</span>
+  <!-- ── WHAT WE BELIEVE ─────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <div class="reveal" style="margin-block-end:64px; max-inline-size:var(--measure);">
+        <div class="eyebrow eyebrow--mute" style="margin-block-end:18px;">What we believe</div>
+        <h2 class="h1">Three principles that decide every project.</h2>
+      </div>
+
+      <div class="principles reveal">
+        <article class="principle">
+          <div class="principle-num">01</div>
+          <p class="principle-claim">Operations and brand are the same problem.</p>
+          <p class="principle-body">
+            A clunky checkout is a brand problem. An invoice that arrives late is
+            a brand problem. We refuse to treat them as separate departments because
+            your customers do not.
+          </p>
+        </article>
+        <article class="principle">
+          <div class="principle-num">02</div>
+          <p class="principle-claim">AI is a tool, not a story.</p>
+          <p class="principle-body">
+            We use AI where it earns its keep: predictive matching, dashboards,
+            workflow automation. We will not put the word in your hero just because
+            it is trending this quarter.
+          </p>
+        </article>
+        <article class="principle">
+          <div class="principle-num">03</div>
+          <p class="principle-claim">Plain language, measured promises.</p>
+          <p class="principle-body">
+            No jargon walls. No fabricated percentages on a homepage. The numbers
+            on this site are the ones we are willing to be measured on. The rest
+            we discuss with you, with context.
+          </p>
+        </article>
       </div>
     </div>
+  </section>
 
-    <!-- 03 Inventory Control -->
-    <div class="service-card" id="tech-inventory">
-      <div class="service-number">03</div>
-      <h3 class="service-title">Inventory Control</h3>
-      <p class="service-desc">Real-time tracking and warehouse management for complete supply chain visibility</p>
-      <div class="service-tags">
-        <span class="service-tag">Stock</span>
-        <span class="service-tag">Warehouse</span>
-        <span class="service-tag">Logistics</span>
+  <!-- ── CLOSING CTA ─────────────────────────────────────────────── -->
+  <section>
+    <div class="container">
+      <div class="cta-block reveal">
+        <!-- Atmosphere: SPARKLES ONLY. Bookends the page with the same texture as the hero. -->
+        <canvas class="hero-sparkles" data-count="90" data-color="#C9A84C" aria-hidden="true"></canvas>
+        <h2 class="h1">Tell us what is slowing you down.</h2>
+        <p class="lede">
+          A free 30-minute call. No deck, no pressure. We map your gap to a clear
+          next step, or tell you we are not the right fit.
+        </p>
+        <a class="btn btn--lg" href="contact.html">Start with a discovery call <span class="arrow">&rarr;</span></a>
+        <div class="fine">Replies typically within one business day</div>
       </div>
     </div>
+  </section>
 
-    <!-- 04 Manufacturing -->
-    <div class="service-card" id="tech-manufacturing">
-      <div class="service-number">04</div>
-      <h3 class="service-title">Manufacturing</h3>
-      <p class="service-desc">Production planning, quality control, and shop floor management operations</p>
-      <div class="service-tags">
-        <span class="service-tag">MRP</span>
-        <span class="service-tag">Production</span>
-        <span class="service-tag">Quality</span>
+  <!-- ── FOOTER ──────────────────────────────────────────────────── -->
+  <footer class="foot">
+    <div class="container">
+      <div class="foot-grid">
+        <div class="foot-col">
+          <img class="foot-wordmark" src="assets/img/knova-wordmark.png" alt="Knova" />
+          <p class="foot-brand-tag">
+            Hybrid B2B firm. Enterprise systems, custom platforms, and the brand
+            systems that wrap them. Tech and Studio, one team.
+          </p>
+        </div>
+        <div class="foot-col">
+          <div class="foot-title">Sitemap</div>
+          <a class="foot-link" href="index.html">Home</a>
+          <a class="foot-link" href="tech.html">Knova Tech</a>
+          <a class="foot-link" href="studio.html">Knova Studio</a>
+          <a class="foot-link" href="contact.html">Contact</a>
+        </div>
+        <div class="foot-col">
+          <div class="foot-title">Get in touch</div>
+          <a class="foot-link" href="mailto:hello@knova.studio">hello@knova.studio</a>
+          <a class="foot-link" href="contact.html">Book a discovery call</a>
+          <span class="foot-link">MENA &middot; remote-friendly</span>
+          <div class="foot-social" aria-label="Knova on social">
+            <a href="https://www.linkedin.com/" rel="noopener" aria-label="LinkedIn">In</a>
+            <a href="https://www.instagram.com/" rel="noopener" aria-label="Instagram">Ig</a>
+            <a href="https://x.com/" rel="noopener" aria-label="X (formerly Twitter)">X</a>
+          </div>
+        </div>
+        <div class="foot-col">
+          <div class="foot-title">Legal</div>
+          <a class="foot-link" href="legal.html#privacy">Privacy policy</a>
+          <a class="foot-link" href="legal.html#terms">Terms of service</a>
+          <a class="foot-link" href="legal.html#privacy">Cookies</a>
+        </div>
+      </div>
+      <div class="foot-base">
+        <span>&copy; <span data-year></span> Knova. All rights reserved.</span>
+        <span><a class="foot-link" href="legal.html#privacy">Privacy</a> &middot; <a class="foot-link" href="legal.html#terms">Terms</a></span>
+        <span>Operational excellence meets creative vision</span>
       </div>
     </div>
+  </footer>
 
-    <!-- 05 Finance & Accounting -->
-    <div class="service-card" id="tech-finance">
-      <div class="service-number">05</div>
-      <h3 class="service-title">Finance & Accounting</h3>
-      <p class="service-desc">Automated financial operations with invoicing, reconciliation, and government tax reporting</p>
-      <div class="service-tags">
-        <span class="service-tag">Accounting</span>
-        <span class="service-tag">Invoicing</span>
-        <span class="service-tag">Tax Reports</span>
-      </div>
-    </div>
-
-    <!-- 06 E-Invoicing -->
-    <div class="service-card" id="tech-einvoicing">
-      <div class="service-number">06</div>
-      <h3 class="service-title">E-Invoicing</h3>
-      <p class="service-desc">Country-specific compliance for electronic invoicing with automated government submission</p>
-      <div class="service-tags">
-        <span class="service-tag">Compliance</span>
-        <span class="service-tag">Automation</span>
-        <span class="service-tag">Reporting</span>
-      </div>
-    </div>
-
-    <!-- 07 HR & Payroll -->
-    <div class="service-card" id="tech-hr">
-      <div class="service-number">07</div>
-      <h3 class="service-title">HR & Payroll</h3>
-      <p class="service-desc">Comprehensive HR management with employee lifecycle tracking, automated payroll processing, performance evaluations, leave management, and seamless ZKTeco biometric attendance integration</p>
-      <div class="service-tags">
-        <span class="service-tag">HRMS</span>
-        <span class="service-tag">Payroll</span>
-        <span class="service-tag">ZKTeco</span>
-        <span class="service-tag">Performance</span>
-      </div>
-    </div>
-
-    <!-- 08 Website & E-Commerce -->
-    <div class="service-card" id="tech-ecommerce">
-      <div class="service-number">08</div>
-      <h3 class="service-title">Website & E-Commerce</h3>
-      <p class="service-desc">Build and manage online stores with integrated payment gateways and product catalogs</p>
-      <div class="service-tags">
-        <span class="service-tag">Online Store</span>
-        <span class="service-tag">Payments</span>
-        <span class="service-tag">Catalog</span>
-      </div>
-    </div>
-
-    <!-- 09 E-Marketing -->
-    <div class="service-card" id="tech-emarketing">
-      <div class="service-number">09</div>
-      <h3 class="service-title">E-Marketing</h3>
-      <p class="service-desc">Automated marketing campaigns with email automation and customer segmentation</p>
-      <div class="service-tags">
-        <span class="service-tag">Campaigns</span>
-        <span class="service-tag">Email Auto</span>
-        <span class="service-tag">Segmentation</span>
-      </div>
-    </div>
-
-    <!-- 10 Helpdesk -->
-    <div class="service-card" id="tech-helpdesk">
-      <div class="service-number">10</div>
-      <h3 class="service-title">Helpdesk</h3>
-      <p class="service-desc">Customer support ticketing system with SLA tracking and team collaboration</p>
-      <div class="service-tags">
-        <span class="service-tag">Tickets</span>
-        <span class="service-tag">SLA</span>
-        <span class="service-tag">Collaboration</span>
-      </div>
-    </div>
-
-    <!-- 11 Projects & Timesheets -->
-    <div class="service-card" id="tech-projects">
-      <div class="service-number">11</div>
-      <h3 class="service-title">Projects & Timesheets</h3>
-      <p class="service-desc">Project management with task tracking, timesheet recording, and resource allocation</p>
-      <div class="service-tags">
-        <span class="service-tag">Project Mgmt</span>
-        <span class="service-tag">Timesheets</span>
-        <span class="service-tag">Resources</span>
-      </div>
-    </div>
-
-    <!-- 12 AI & Dashboards -->
-    <div class="service-card" id="tech-ai">
-      <div class="service-number">12</div>
-      <h3 class="service-title">AI & Dashboards</h3>
-      <p class="service-desc">Intelligent analytics and customizable dashboards for real-time business insights</p>
-      <div class="service-tags">
-        <span class="service-tag">AI Analytics</span>
-        <span class="service-tag">Dashboards</span>
-        <span class="service-tag">Insights</span>
-      </div>
-    </div>
-
-    <!-- Featured: Custom Development & Integration -->
-    <div class="service-card featured">
-      <div class="featured-content">
-        <div class="featured-label">Technology Excellence</div>
-        <h3 class="featured-title">Custom Development & Integration</h3>
-        <p class="featured-desc">Bespoke modules and seamless integrations engineered to extend your ERP capabilities</p>
-      </div>
-      <div class="featured-tags">
-        <span class="featured-tag">Custom Modules</span>
-        <span class="featured-tag">Integrations</span>
-        <span class="featured-tag">Automation</span>
-        <span class="featured-tag">API Development</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ KNOVA STUDIO ═══ -->
-<section class="services-section" id="studio">
-  <div class="services-header">
-    <div class="services-branch">Creative Branch</div>
-    <h2 class="services-title">Knova <b>Studio</b></h2>
-    <p class="services-subtitle">Art · Design · Animation</p>
-    <p class="services-desc">Where creative stories find their digital soul — design services crafted for brands who demand excellence</p>
-  </div>
-
-  <div class="services-grid">
-    <div class="service-card" id="studio-brand">
-      <div class="service-number">01</div>
-      <h3 class="service-title">Brand Identity & Visual Design</h3>
-      <p class="service-desc">Complete brand systems — logo, colors, typography, and visual language that defines your brand</p>
-      <div class="service-tags">
-        <span class="service-tag">Logo Design</span>
-        <span class="service-tag">Brand Guidelines</span>
-        <span class="service-tag">Visual Identity</span>
-        <span class="service-tag">Typography</span>
-      </div>
-    </div>
-
-    <div class="service-card" id="studio-uiux">
-      <div class="service-number">02</div>
-      <h3 class="service-title">UI/UX Design</h3>
-      <p class="service-desc">Digital experiences that convert — app, platform, and system interfaces designed for modern businesses</p>
-      <div class="service-tags">
-        <span class="service-tag">App Design</span>
-        <span class="service-tag">User Research</span>
-        <span class="service-tag">Prototyping</span>
-        <span class="service-tag">Interface Design</span>
-      </div>
-    </div>
-
-    <div class="service-card" id="studio-web">
-      <div class="service-number">03</div>
-      <h3 class="service-title">Website Design & Development</h3>
-      <p class="service-desc">Elegant, high-converting websites for premium brands — built to launch and designed to impress</p>
-      <div class="service-tags">
-        <span class="service-tag">Web Design</span>
-        <span class="service-tag">E-commerce</span>
-        <span class="service-tag">Development</span>
-        <span class="service-tag">SEO</span>
-      </div>
-    </div>
-
-    <div class="service-card" id="studio-social">
-      <div class="service-number">04</div>
-      <h3 class="service-title">Social Media & Advertisements</h3>
-      <p class="service-desc">Scroll-stopping campaigns designed for creative brands — content that attracts, engages, and converts</p>
-      <div class="service-tags">
-        <span class="service-tag">Content Creation</span>
-        <span class="service-tag">Campaign Design</span>
-        <span class="service-tag">Ad Creative</span>
-        <span class="service-tag">Social Strategy</span>
-      </div>
-    </div>
-
-    <div class="service-card" id="studio-3d">
-      <div class="service-number">05</div>
-      <h3 class="service-title">3D Art & Design</h3>
-      <p class="service-desc">Photorealistic 3D visualization and product rendering — advanced modeling, simulation, and digital prototyping</p>
-      <div class="service-tags">
-        <span class="service-tag">CLO3D</span>
-        <span class="service-tag">3D Modeling</span>
-        <span class="service-tag">Rendering</span>
-        <span class="service-tag">Visualization</span>
-      </div>
-    </div>
-
-    <div class="service-card" id="studio-motion">
-      <div class="service-number">06</div>
-      <h3 class="service-title">Motion & Animation Design</h3>
-      <p class="service-desc">Bring your brand to life — animated content, reels, transitions, and digital storytelling for creative brands</p>
-      <div class="service-tags">
-        <span class="service-tag">Animation</span>
-        <span class="service-tag">Video Production</span>
-        <span class="service-tag">Reels</span>
-        <span class="service-tag">Storytelling</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ CONTACT / LEAD GENERATION ═══ -->
-<section class="contact" id="contact">
-  <div class="contact-content">
-    <div class="contact-label">Get In Touch</div>
-    <h2 class="contact-title">Book Your Free Consultation</h2>
-    <p class="contact-desc">
-      Whether you need ERP implementation or creative excellence — let's discuss how Knova can elevate your business
-    </p>
-
-    <div class="consultation-features">
-      <div class="consultation-feature">
-        <h3 class="consultation-feature-title">30-Minute Discovery</h3>
-        <p class="consultation-feature-desc">Focused strategic session aligned with your objectives</p>
-      </div>
-
-      <div class="consultation-feature">
-        <h3 class="consultation-feature-title">Custom Roadmap</h3>
-        <p class="consultation-feature-desc">Tailored scope of work designed for your business</p>
-      </div>
-
-      <div class="consultation-feature">
-        <h3 class="consultation-feature-title">No Commitment</h3>
-        <p class="consultation-feature-desc">Professional consultation with zero pressure to proceed</p>
-      </div>
-    </div>
-
-    <form class="contact-form" id="contactForm">
-      <div class="form-group">
-        <label class="form-label">Full Name *</label>
-        <input type="text" class="form-input" name="name" required>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Company Name *</label>
-        <input type="text" class="form-input" name="company" required>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Email Address *</label>
-        <input type="email" class="form-input" name="email" required>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Phone Number *</label>
-        <input type="tel" class="form-input" name="phone" required>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Service Interested In *</label>
-        <select class="form-select" name="service" required>
-          <option value="">Select a service</option>
-          <option value="ERP Implementation">ERP Implementation</option>
-          <option value="Supply Chain Management">Supply Chain Management</option>
-          <option value="Finance & Accounting">Finance & Accounting</option>
-          <option value="HR & Payroll">HR & Payroll</option>
-          <option value="Manufacturing">Manufacturing</option>
-          <option value="CRM & Sales">CRM & Sales</option>
-          <option value="Brand Identity">Brand Identity</option>
-          <option value="UI/UX Design">UI/UX Design</option>
-          <option value="Website Design">Website Design</option>
-          <option value="Social Media">Social Media</option>
-          <option value="3D Art & Design">3D Art & Design</option>
-          <option value="Motion & Animation">Motion & Animation</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Message</label>
-        <textarea class="form-textarea" name="message" placeholder="Tell us about your project..."></textarea>
-      </div>
-
-      <div class="form-btn-wrapper">
-        <button type="submit" class="contact-btn"><span>Send Message</span></button>
-      </div>
-    </form>
-  </div>
-</section>
-
-<!-- ═══ KEEP IN TOUCH ═══ -->
-<section class="keep-in-touch">
-  <div class="keep-in-touch-header">
-    <div class="keep-in-touch-label">Stay Connected</div>
-    <h2 class="keep-in-touch-title">Keep In Touch</h2>
-    <p class="keep-in-touch-desc">Follow us on Instagram, connect on LinkedIn, or reach out on WhatsApp — we're here to help</p>
-  </div>
-
-  <div class="keep-in-touch-grid">
-    <a href="https://instagram.com/knovastudio" target="_blank" class="keep-in-touch-card">
-      <h3 class="keep-in-touch-card-title">Instagram</h3>
-      <p class="keep-in-touch-card-desc">Explore our portfolio and creative process through visual storytelling</p>
-    </a>
-
-    <a href="https://wa.me/YOUR_WHATSAPP_NUMBER" target="_blank" class="keep-in-touch-card">
-      <h3 class="keep-in-touch-card-title">WhatsApp</h3>
-      <p class="keep-in-touch-card-desc">Connect instantly for project inquiries and rapid consultations</p>
-    </a>
-
-    <a href="https://linkedin.com/company/knova" target="_blank" class="keep-in-touch-card">
-      <h3 class="keep-in-touch-card-title">LinkedIn</h3>
-      <p class="keep-in-touch-card-desc">Network professionally and access enterprise solutions insights</p>
-    </a>
-  </div>
-</section>
-
-<!-- ═══ FOOTER ═══ -->
-<footer class="footer">
-  <div class="footer-content">
-    <div class="footer-section footer-logo-section">
-      <div style="font-family: 'Cormorant Garamond', serif; font-size: 32px; letter-spacing: 8px; color: #f0ece4; margin-bottom: 16px; font-weight: 300;">KNOVA</div>
-      <svg viewBox="0 0 160 160" fill="none" width="48" height="48">
-        <path d="M8 8 L8 65" stroke="#f0ece4" stroke-width="2" stroke-linecap="round" opacity="1"/>
-        <path d="M8 36 L48 8" stroke="#f0ece4" stroke-width="2" stroke-linecap="round" opacity="1"/>
-        <path d="M8 36 L48 65" stroke="#f0ece4" stroke-width="2" stroke-linecap="round" opacity="1"/>
-        <path d="M55 148 L105 12" stroke="#E5C158" stroke-width="1.5" stroke-linecap="round" opacity="1"/>
-        <path d="M112 95 L112 152" stroke="#f0ece4" stroke-width="2" stroke-linecap="round" opacity="1"/>
-        <path d="M112 95 L152 152" stroke="#f0ece4" stroke-width="2" stroke-linecap="round" opacity="1"/>
-        <path d="M152 95 L152 152" stroke="#f0ece4" stroke-width="2" stroke-linecap="round" opacity="1"/>
-      </svg>
-      <p class="footer-tagline">Where operational excellence meets creative vision</p>
-      <div class="footer-social">
-        <a href="https://instagram.com/knovastudio" target="_blank" class="social-link">Instagram</a>
-        <a href="https://linkedin.com/company/knova" target="_blank" class="social-link">LinkedIn</a>
-        <a href="https://wa.me/YOUR_WHATSAPP_NUMBER" target="_blank" class="social-link">WhatsApp</a>
-      </div>
-    </div>
-
-    <div class="footer-section">
-      <div class="footer-title">Knova Tech</div>
-      <div class="footer-links">
-        <a href="#tech-sales" class="footer-link">Sales & CRM</a>
-        <a href="#tech-purchase" class="footer-link">Purchase Management</a>
-        <a href="#tech-inventory" class="footer-link">Inventory Control</a>
-        <a href="#tech-manufacturing" class="footer-link">Manufacturing</a>
-        <a href="#tech-finance" class="footer-link">Finance & Accounting</a>
-        <a href="#tech-hr" class="footer-link">HR & Payroll</a>
-      </div>
-    </div>
-
-    <div class="footer-section">
-      <div class="footer-title">Knova Studio</div>
-      <div class="footer-links">
-        <a href="#studio-brand" class="footer-link">Brand Identity</a>
-        <a href="#studio-uiux" class="footer-link">UI/UX Design</a>
-        <a href="#studio-web" class="footer-link">Website Design</a>
-        <a href="#studio-social" class="footer-link">Social Media</a>
-        <a href="#studio-3d" class="footer-link">3D Art & Design</a>
-        <a href="#studio-motion" class="footer-link">Motion & Animation</a>
-      </div>
-    </div>
-
-    <div class="footer-section">
-      <div class="footer-title">Company</div>
-      <div class="footer-links">
-        <a href="#contact" class="footer-link">Contact</a>
-        <a href="#" class="footer-link">Privacy Policy</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p class="footer-copyright">© 2026 Knova · All rights reserved · knova.studio</p>
-  </div>
-</footer>
-
-<script>
-  // ═══════════════════════════════
-  // LOADER
-  // ═══════════════════════════════
-  const loader = document.getElementById('loader');
-  const nav = document.getElementById('nav');
-  const fill = document.getElementById('ldFill');
-
-  setTimeout(() => { fill.style.width = '100%'; }, 400);
-
-  setTimeout(() => {
-    loader.classList.add('hidden');
-    nav.classList.add('show');
-  }, 3800);
-
-  setTimeout(() => { loader.remove(); }, 4700);
-
-  // ═══════════════════════════════
-  // NAVIGATION SCROLL EFFECT
-  // ═══════════════════════════════
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 100) {
-      nav.classList.add('scrolled');
-    } else {
-      nav.classList.remove('scrolled');
-    }
-  });
-
-  // ═══════════════════════════════
-  // MOBILE MENU
-  // ═══════════════════════════════
-  const navToggle = document.getElementById('navToggle');
-  const navMenu = document.getElementById('navMenu');
-
-  navToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-  });
-
-  // ═══════════════════════════════
-  // SMOOTH SCROLL TO SERVICE
-  // ═══════════════════════════════
-  function scrollToService(serviceId) {
-    const element = document.getElementById(serviceId);
-    if (element) {
-      const offset = 100;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-  }
-
-  // Close mobile menu when clicking a link
-  document.querySelectorAll('.nav-link, .nav-dropdown-item').forEach(link => {
-    link.addEventListener('click', () => {
-      if (window.innerWidth <= 768) {
-        navMenu.classList.remove('active');
-      }
-    });
-  });
-
-  // ═══════════════════════════════
-  // CONTACT FORM SUBMISSION (CRM LEAD)
-  // ═══════════════════════════════
-  const contactForm = document.getElementById('contactForm');
-  
-  contactForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Get form data
-    const formData = new FormData(contactForm);
-    const data = {
-      name: formData.get('name'),
-      company: formData.get('company'),
-      email: formData.get('email'),
-      phone: formData.get('phone'),
-      service: formData.get('service'),
-      message: formData.get('message')
-    };
-    
-    // TODO: Replace this with your Odoo CRM API endpoint
-    // Example: Send to Odoo CRM to create a lead
-    /*
-    fetch('YOUR_ODOO_CRM_ENDPOINT', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-      alert('Thank you! We will contact you soon.');
-      contactForm.reset();
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Something went wrong. Please try again.');
-    });
-    */
-    
-    // For now, just show a success message
-    alert('Thank you for your interest! We will contact you soon.');
-    contactForm.reset();
-  });
-</script>
-
+  <script src="assets/js/knova.js" defer></script>
 </body>
 </html>
